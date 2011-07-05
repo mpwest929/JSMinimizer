@@ -6,8 +6,20 @@
 # to work as expected.
 # Author: MikeWest
 
+# Needs to be updated so that spaces that need to exist aren't stripped away
+# This will require the recognition of which tokens need to be separated from
+# eachother. I.e. var from name
+
 from string import whitespace
 from sys import *;
+
+jsKeywords = ["function", "var", "const", "return", "import"]
+
+def isTokenJSKeyword(sToken):
+	for iKeyword in jsKeywords:
+		if sToken.count(iKeyword) > 0:
+			return True;
+	return False;
 
 # Given a string remove all whitespace from it and
 # return the whitespace-stripped version
@@ -18,9 +30,14 @@ def removewhitespace(sLine):
 	iLineBeg = 0
 	stripped = []
 	for iCurr in range(0,len(sLine)):
-		if whitespace.find(sLine[iCurr]) >= 0:
+		if sLine[iCurr] != " " and whitespace.find(sLine[iCurr]) >= 0:
 			if iCurr > iLineBeg:
-				stripped.append(sLine[iLineBeg:(iCurr)])
+				token = sLine[iLineBeg:iCurr];
+				stripped.append(token)
+				
+				#if isTokenJSKeyword(token):
+				#	stripped.append(" ")
+					
 			iLineBeg = iCurr+1
 			
 	# If no whitespace appears on the line then return input line
